@@ -1,0 +1,61 @@
+.header img {
+  height: 80px;
+}
+.header {
+  text-align: center;
+}
+.header nav {
+  background: linear-gradient(-50deg, #ee5952, #ea3a7e, #20aadb, #23e0b3);
+  background-size: 320% 200%;
+  -webkit-animation: Gradient 15s ease infinite;
+  -moz-animation: Gradient 15s ease infinite;
+  animation: Gradient 15s ease infinite;
+  line-height: 40px;
+  font-size: 25px;
+  font-weight: 400;
+  padding: 20px;
+  border-radius: 8px;
+  width: 90%;
+  margin: 20px auto;
+}
+nav a {
+  text-decoration: none;
+  color: aliceblue;
+  margin-right: 30px;
+}
+nav a:hover {
+  color: gray;
+}
+@-webkit-keyframes Gradient {
+  0% {
+    background-position: 0 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0 50%;
+  }
+}
+@-moz-keyframes Gradient {
+  0% {
+    background-position: 0 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0 50%;
+  }
+}
+@keyframes Gradient {
+  0% {
+    background-position: 0 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0 50%;
+  }
+}
