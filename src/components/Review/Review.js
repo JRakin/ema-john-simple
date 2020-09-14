@@ -10,10 +10,12 @@ import ReviewItem from '../ReviewItem/ReviewItem';
 import Cart from '../Cart/Cart';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
+import { useHistory } from 'react-router-dom';
 // import { Link } from 'react-router-dom';
 
 const Review = () => {
   const [cart, setCart] = useState([]);
+  const history = useHistory();
 
   const handleRemoveProduct = (productKey) => {
     const newCart = cart.filter((pd) => pd.key !== productKey);
@@ -22,8 +24,7 @@ const Review = () => {
   };
 
   const handlePlaceOrder = () => {
-    setCart([]);
-    processOrder();
+    history.push('/shipment');
   };
 
   useEffect(() => {
@@ -55,8 +56,8 @@ const Review = () => {
       <div className="cart-container">
         <Cart cart={cart}>
           <button className="main-btn" onClick={handlePlaceOrder}>
-            <FontAwesomeIcon icon={faShoppingCart}></FontAwesomeIcon> Place
-            Order
+            <FontAwesomeIcon icon={faShoppingCart}></FontAwesomeIcon> Proceed
+            Checkout
           </button>
         </Cart>
       </div>
