@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import fakeData from '../../fakeData';
 import './Shop.css';
 import Product from '../Product/Product';
 import Cart from '../Cart/Cart';
@@ -12,19 +11,31 @@ import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 
 const Shop = () => {
-  const first10 = fakeData.slice(0, 10);
-  const [products, setProduct] = useState(first10);
+  // const first10 = fakeData.slice(0, 10);
+  const [products, setProduct] = useState([]);
   const [cart, setCart] = useState([]);
+
+  useEffect(() => {
+    fetch('http://localhost:4000/products')
+      .then((res) => res.json())
+      .then((data) => {
+        setProduct(data);
+      });
+  }, []);
 
   useEffect(() => {
     const savedCart = getDatabaseCart();
     const productKeys = Object.keys(savedCart);
-    const previousCart = productKeys.map((key) => {
-      const product = fakeData.find((pd) => pd.key === key);
-      product.quantity = savedCart[key];
-      return product;
-    });
-    setCart(previousCart);
+
+    fetch('http://localhost:4000/getAll', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(productKeys),
+    })
+      .then((res) => res.json())
+      .then((data) => setCart(data));
   }, []);
 
   const handleAddProduct = (product) => {
@@ -47,12 +58,12 @@ const Shop = () => {
   return (
     <div className="twin-container">
       <div className="product-container">
-        {products.map((product) => (
+        {products.map((product, index) => (
           <Product
             showAddToCart={true}
             handleAddProduct={handleAddProduct}
             product={product}
-            key={product.key}
+            key={product.key + '' + index}
           ></Product>
         ))}
       </div>

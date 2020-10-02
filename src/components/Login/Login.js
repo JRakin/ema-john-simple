@@ -33,15 +33,15 @@ function Login() {
       .then((result) => {
         // The signed-in user info.
         const user = result.user;
-
         const signedInUser = {
           isLoggedIn: true,
           name: user.displayName,
           email: user.email,
           photoUrl: user.photoURL,
         };
-
         setUser(signedInUser);
+        setLoggedInUser(signedInUser);
+        history.replace(from);
       })
       .catch((err) => {
         console.log(err.message);

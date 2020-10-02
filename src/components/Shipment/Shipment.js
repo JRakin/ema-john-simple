@@ -3,13 +3,40 @@ import './Shipment.css';
 import { useForm } from 'react-hook-form';
 import { useContext } from 'react';
 import { UserContext } from '../../App';
+import { getDatabaseCart, processOrder } from '../../utilities/databaseManager';
+import Swal from 'sweetalert2';
 
 const Shipment = () => {
   const [loggedInUser, setLoggedInUser] = useContext(UserContext);
   const { register, handleSubmit, watch, errors } = useForm();
-  const onSubmit = (data) => console.log(data);
 
-  console.log(watch('example')); // watch input value by passing the name of it
+  const onSubmit = (data) => {
+    const savedCart = getDatabaseCart;
+    const orderDetails = {
+      ...loggedInUser,
+
+      shipment: data,
+      productsOrdered: savedCart,
+      placed: new Date(),
+    };
+
+    fetch('http://localhost:4000/addOrder', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(orderDetails),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data) {
+          processOrder();
+          Swal.fire('Congrats', 'Your order placed successfully', 'success');
+        }
+      });
+  };
+
+  // console.log(watch('example')); // watch input value by passing the name of it
 
   return (
     <form className="ship-form" onSubmit={handleSubmit(onSubmit)}>
@@ -39,7 +66,7 @@ const Shipment = () => {
         placeholder="Your Phone Number"
       />
       {errors.phone && <span className="error">Phone is required</span>}
-      <input type="submit" />
+      <input style={{ cursor: 'pointer' }} type="submit" />
     </form>
   );
 };

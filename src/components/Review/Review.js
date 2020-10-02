@@ -5,7 +5,6 @@ import {
   removeFromDatabaseCart,
   processOrder,
 } from '../../utilities/databaseManager';
-import fakeData from '../../fakeData';
 import ReviewItem from '../ReviewItem/ReviewItem';
 import Cart from '../Cart/Cart';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -30,13 +29,16 @@ const Review = () => {
   useEffect(() => {
     const savedCart = getDatabaseCart();
     const productKeys = Object.keys(savedCart);
-    // console.log(productKeys);
-    const cartProducts = productKeys.map((key) => {
-      const product = fakeData.find((pd) => pd.key === key);
-      product.quantity = savedCart[key];
-      return product;
-    });
-    setCart(cartProducts);
+
+    fetch('http://localhost:4000/getAll', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(productKeys),
+    })
+      .then((res) => res.json())
+      .then((data) => setCart(data));
   }, []);
 
   return (
@@ -45,10 +47,10 @@ const Review = () => {
       style={{ margin: '10px auto', width: '70%' }}
     >
       <div className="product-container">
-        {cart.map((pd) => (
+        {cart.map((pd, index) => (
           <ReviewItem
             product={pd}
-            key={pd.key}
+            key={pd.key + '' + index}
             handleRemoveProduct={handleRemoveProduct}
           ></ReviewItem>
         ))}
