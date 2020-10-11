@@ -9,8 +9,10 @@ const Header = () => {
   const [loggedInUser, setLoggedInUser] = useContext(UserContext);
   return (
     <div className="header">
-      <img src={logo} alt="logo" />
       <nav>
+        <Link to="/">
+          <img src={logo} alt="logo" />
+        </Link>
         <Link to="/shop">Shop</Link>
         <Link to="/review">Order Review</Link>
         <Link to="/manage">Manage Inventory</Link>

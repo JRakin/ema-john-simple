@@ -41,12 +41,27 @@ function Login() {
         };
         setUser(signedInUser);
         setLoggedInUser(signedInUser);
+        setUserToken();
+
         history.replace(from);
       })
       .catch((err) => {
         console.log(err.message);
       });
   };
+
+  const setUserToken = () => {
+    firebase
+      .auth()
+      .currentUser.getIdToken(/* forceRefresh */ true)
+      .then(function (idToken) {
+        sessionStorage.setItem('token', idToken);
+      })
+      .catch(function (error) {
+        // Handle error
+      });
+  };
+
   const handleSignOut = () => {
     firebase
       .auth()
@@ -67,6 +82,7 @@ function Login() {
         console.log(err.message);
       });
   };
+
   const handleChange = (e) => {
     let isFormValid = true;
     if (e.target.name === 'email') {

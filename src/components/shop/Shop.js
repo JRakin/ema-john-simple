@@ -16,36 +16,45 @@ const Shop = () => {
   const [cart, setCart] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:4000/products')
-      .then((res) => res.json())
-      .then((data) => {
-        setProduct(data);
-      });
+    const fetchData = () => {
+      fetch('http://localhost:4000/products')
+        .then((res) => res.json())
+        .then((data) => {
+          setProduct(data);
+        });
+    };
+    fetchData();
   }, []);
+
+  console.log(products);
 
   useEffect(() => {
     const savedCart = getDatabaseCart();
     const productKeys = Object.keys(savedCart);
 
-    fetch('http://localhost:4000/getAll', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(productKeys),
-    })
-      .then((res) => res.json())
-      .then((data) => setCart(data));
+    const fetchData = () => {
+      fetch('http://localhost:4000/productsByKeys', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(productKeys),
+      })
+        .then((res) => res.json())
+        .then((data) => setCart(data));
+    };
+    fetchData();
   }, []);
 
   const handleAddProduct = (product) => {
-    const sameProduct = cart.find((pd) => pd.key === product.key);
+    const toBeAddedKey = product.key;
+    const sameProduct = cart.find((pd) => pd.key === toBeAddedKey);
     let count = 1;
     let newCart;
     if (sameProduct) {
       count = sameProduct.quantity + 1;
       sameProduct.quantity = count;
-      const others = cart.filter((pd) => pd.key !== product.key);
+      const others = cart.filter((pd) => pd.key !== toBeAddedKey);
       newCart = [...others, sameProduct];
     } else {
       product.quantity = 1;
@@ -58,12 +67,12 @@ const Shop = () => {
   return (
     <div className="twin-container">
       <div className="product-container">
-        {products.map((product, index) => (
+        {products.map((pd, index) => (
           <Product
             showAddToCart={true}
             handleAddProduct={handleAddProduct}
-            product={product}
-            key={product.key + '' + index}
+            product={pd}
+            key={pd.key + '' + index}
           ></Product>
         ))}
       </div>

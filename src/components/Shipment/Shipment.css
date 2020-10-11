@@ -4,7 +4,6 @@
 .ship-form input {
   display: block;
   box-sizing: border-box;
-  margin: 10px auto;
   padding: 5px 10px;
   border: 1px solid gray;
   border-radius: 5px;

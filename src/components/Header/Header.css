@@ -1,5 +1,6 @@
 .header img {
-  height: 80px;
+  height: 30px;
+  margin: 0 auto;
 }
 .header {
   text-align: center;
@@ -14,9 +15,7 @@
   font-size: 25px;
   font-weight: 400;
   padding: 20px;
-  border-radius: 8px;
-  width: 90%;
-  margin: 20px auto;
+  width: 100%;
 }
 .signOutBtn {
   background-color: transparent;

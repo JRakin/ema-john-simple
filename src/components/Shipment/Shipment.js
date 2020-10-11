@@ -1,21 +1,27 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Shipment.css';
 import { useForm } from 'react-hook-form';
 import { useContext } from 'react';
 import { UserContext } from '../../App';
 import { getDatabaseCart, processOrder } from '../../utilities/databaseManager';
 import Swal from 'sweetalert2';
+import ProcessPayment from '../ProcessPayment/ProcessPayment';
 
 const Shipment = () => {
   const [loggedInUser, setLoggedInUser] = useContext(UserContext);
-  const { register, handleSubmit, watch, errors } = useForm();
+  const { register, handleSubmit, errors } = useForm();
+  const [shippingData, setShippingData] = useState(null);
 
   const onSubmit = (data) => {
-    const savedCart = getDatabaseCart;
+    setShippingData(data);
+  };
+
+  const handlePaymentSuccess = (paymentId) => {
+    const savedCart = getDatabaseCart();
     const orderDetails = {
       ...loggedInUser,
-
-      shipment: data,
+      paymentId: paymentId,
+      shipment: shippingData,
       productsOrdered: savedCart,
       placed: new Date(),
     };
@@ -37,37 +43,49 @@ const Shipment = () => {
   };
 
   // console.log(watch('example')); // watch input value by passing the name of it
-
   return (
-    <form className="ship-form" onSubmit={handleSubmit(onSubmit)}>
-      <input
-        name="name"
-        defaultValue={loggedInUser.name}
-        ref={register({ required: true })}
-        placeholder="Your Name"
-      />
-      {errors.name && <span className="error">Name is required</span>}
-      <input
-        name="email"
-        defaultValue={loggedInUser.email}
-        ref={register({ required: true })}
-        placeholder="Your Email"
-      />
-      {errors.email && <span className="error">Email is required</span>}
-      <input
-        name="address"
-        ref={register({ required: true })}
-        placeholder="Address"
-      />
-      {errors.address && <span className="error">Address is required</span>}
-      <input
-        name="phone"
-        ref={register({ required: true })}
-        placeholder="Your Phone Number"
-      />
-      {errors.phone && <span className="error">Phone is required</span>}
-      <input style={{ cursor: 'pointer' }} type="submit" />
-    </form>
+    <div className="row">
+      <div
+        style={{ display: shippingData ? 'none' : 'block' }}
+        className="col-md-6"
+      >
+        <form className="ship-form" onSubmit={handleSubmit(onSubmit)}>
+          <input
+            name="name"
+            defaultValue={loggedInUser.name}
+            ref={register({ required: true })}
+            placeholder="Your Name"
+          />
+          {errors.name && <span className="error">Name is required</span>}
+          <input
+            name="email"
+            defaultValue={loggedInUser.email}
+            ref={register({ required: true })}
+            placeholder="Your Email"
+          />
+          {errors.email && <span className="error">Email is required</span>}
+          <input
+            name="address"
+            ref={register({ required: true })}
+            placeholder="Address"
+          />
+          {errors.address && <span className="error">Address is required</span>}
+          <input
+            name="phone"
+            ref={register({ required: true })}
+            placeholder="Your Phone Number"
+          />
+          {errors.phone && <span className="error">Phone is required</span>}
+          <input style={{ cursor: 'pointer' }} type="submit" />
+        </form>
+      </div>
+      <div
+        style={{ display: shippingData ? 'block' : 'none' }}
+        className="col-md-6"
+      >
+        <ProcessPayment handlePayment={handlePaymentSuccess}></ProcessPayment>
+      </div>
+    </div>
   );
 };
 
